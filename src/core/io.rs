@@ -1,5 +1,5 @@
 use std::fmt::{Debug, Display};
-use crate::conversion_error;
+use crate::{conversion_error, take_from_vec};
 use super::errors::Error;
 //use crate::{make_error, core::errors::Error};
 
@@ -57,7 +57,7 @@ impl TryInto<i16> for BinaryUnit {
             return Err(conversion_error!("expected 2 bytes, got {}", self.len()));
         }
 
-        Ok( i16::from_ne_bytes([ self.data[0], self.data[1] ]) )
+        Ok( i16::from_ne_bytes(take_from_vec!(2, self.data, u8)) )
     }
 }
 impl TryInto<i32> for BinaryUnit {
@@ -67,7 +67,7 @@ impl TryInto<i32> for BinaryUnit {
             return Err(conversion_error!("expected 4 bytes, got {}", self.len()));
         }
 
-        Ok( i32::from_ne_bytes([ self.data[0], self.data[1], self.data[2], self.data[3] ]) )
+        Ok( i32::from_ne_bytes(take_from_vec!(4, self.data, u8)) )
     }
 }
 impl TryInto<i64> for BinaryUnit {
@@ -77,21 +77,17 @@ impl TryInto<i64> for BinaryUnit {
             return Err(conversion_error!("expected 8 bytes, got {}", self.len()));
         }
 
-        Ok( i64::from_ne_bytes([ self.data[0], self.data[1], self.data[2], self.data[3], self.data[4], self.data[5], self.data[6], self.data[7] ]) )
+        Ok( i64::from_ne_bytes(take_from_vec!(8, self.data, u8)) )
     }
 }
 impl TryInto<i128> for BinaryUnit {
     type Error = Error;
     fn try_into(self) -> Result<i128, Self::Error> {
         if self.len() != 16 {
-            return Err(conversion_error!("expected 8 bytes, got {}", self.len()));
+            return Err(conversion_error!("expected 16 bytes, got {}", self.len()));
         }
 
-        let mut extracted: [u8; 16] = [0; 16];
-        for i in 0..15 {
-            extracted[i] = self.data[i];
-        }
-
+        let extracted = take_from_vec!(16, self.data, u8);
         Ok( i128::from_ne_bytes(extracted) )
     }
 }
@@ -112,7 +108,7 @@ impl TryInto<u16> for BinaryUnit {
             return Err(conversion_error!("expected 2 bytes, got {}", self.len()));
         }
 
-        Ok( u16::from_ne_bytes([ self.data[0], self.data[1] ]) )
+        Ok( u16::from_ne_bytes(take_from_vec!(2, self.data, u8)) )
     }
 }
 impl TryInto<u32> for BinaryUnit {
@@ -122,7 +118,7 @@ impl TryInto<u32> for BinaryUnit {
             return Err(conversion_error!("expected 4 bytes, got {}", self.len()));
         }
 
-        Ok( u32::from_ne_bytes([ self.data[0], self.data[1], self.data[2], self.data[3] ]) )
+        Ok( u32::from_ne_bytes(take_from_vec!(4, self.data, u8)) )
     }
 }
 impl TryInto<u64> for BinaryUnit {
@@ -132,7 +128,7 @@ impl TryInto<u64> for BinaryUnit {
             return Err(conversion_error!("expected 8 bytes, got {}", self.len()));
         }
 
-        Ok( u64::from_ne_bytes([ self.data[0], self.data[1], self.data[2], self.data[3], self.data[4], self.data[5], self.data[6], self.data[7] ]) )
+        Ok( u64::from_ne_bytes(take_from_vec!(8, self.data, u8)) )
     }
 }
 impl TryInto<u128> for BinaryUnit {
@@ -142,12 +138,7 @@ impl TryInto<u128> for BinaryUnit {
             return Err(conversion_error!("expected 8 bytes, got {}", self.len()));
         }
 
-        let mut extracted: [u8; 16] = [0; 16];
-        for i in 0..15 {
-            extracted[i] = self.data[i];
-        }
-
-        Ok( u128::from_ne_bytes(extracted) )
+        Ok( u128::from_ne_bytes(take_from_vec!(16, self.data, u8)) )
     }
 }
 impl TryInto<f32> for BinaryUnit {
@@ -157,7 +148,7 @@ impl TryInto<f32> for BinaryUnit {
             return Err(conversion_error!("expected 4 bytes, got {}", self.len()));
         }
 
-        Ok( f32::from_ne_bytes([ self.data[0], self.data[1], self.data[2], self.data[3] ]) )
+        Ok( f32::from_ne_bytes(take_from_vec!(4, self.data, u8)) )
     }
 }
 impl TryInto<f64> for BinaryUnit {
@@ -167,7 +158,7 @@ impl TryInto<f64> for BinaryUnit {
             return Err(conversion_error!("expected 8 bytes, got {}", self.len()));
         }
 
-        Ok( f64::from_ne_bytes([ self.data[0], self.data[1], self.data[2], self.data[3], self.data[4], self.data[5], self.data[6], self.data[7] ]) )
+        Ok( f64::from_ne_bytes(take_from_vec!(8, self.data, u8)) )
     }
 }
 impl TryInto<usize> for BinaryUnit {
@@ -177,7 +168,7 @@ impl TryInto<usize> for BinaryUnit {
             return Err(conversion_error!("expected 8 bytes, got {}", self.len()));
         }
 
-        Ok( usize::from_ne_bytes([ self.data[0], self.data[1], self.data[2], self.data[3], self.data[4], self.data[5], self.data[6], self.data[7] ]) )
+        Ok( usize::from_ne_bytes(take_from_vec!(8, self.data, u8)) )
     }
 }
 impl TryInto<isize> for BinaryUnit {
@@ -187,7 +178,7 @@ impl TryInto<isize> for BinaryUnit {
             return Err(conversion_error!("expected 8 bytes, got {}", self.len()));
         }
 
-        Ok( isize::from_ne_bytes([ self.data[0], self.data[1], self.data[2], self.data[3], self.data[4], self.data[5], self.data[6], self.data[7] ]) )
+        Ok( isize::from_ne_bytes(take_from_vec!(8, self.data, u8)) )
     }
 }
 
