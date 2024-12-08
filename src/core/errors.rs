@@ -53,6 +53,11 @@ macro_rules! argument_error {
         {
             Error::ArgumentError($name.to_string(), format!("{:?}", &$value))
         }
+    };
+    ($name: expr, $fmt_str: expr, $($v: expr), *) => {
+        {
+            Error::ArgumentError($name.to_string(), format!($fmt_str, $(&$v)* ))
+        }
     }
 }
 /// Returns Error of NullError, containing a name passed
