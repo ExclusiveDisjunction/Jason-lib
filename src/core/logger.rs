@@ -37,6 +37,11 @@ pub struct LoggerData {
     state: LoggerLevel, //Currently being used
     level: LoggerLevel //The level of the logger (what we will accept)
 }
+impl Default for LoggerData {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 impl LoggerData {
     pub fn new() -> Self {
         Self {
@@ -48,9 +53,9 @@ impl LoggerData {
 
     pub fn open(&mut self, path: &str, level: LoggerLevel) -> Result<(), Error> {
         if self.is_open() {
-            return Err(operation_error!("open", "already open"));
+            Err(operation_error!("open", "already open"))
         } else if level == LoggerLevel::None {
-            return Err(argument_error!("level", "cannot open under level '{:?}'", LoggerLevel::None))
+            Err(argument_error!("level", "cannot open under level '{:?}'", LoggerLevel::None))
         } else {
             self.file = match std::fs::File::create(path) {
                 Ok(f) => Some(f),
@@ -133,13 +138,12 @@ impl LoggerData {
             return Err(operation_error!("end log", "not in log"));
         }
 
-        match self.get_file().write("\n".as_bytes()) {
-            Ok(_) => {
-                self.state = LoggerLevel::None;
-                Ok(())
-            },
-            Err(e) => Err(io_error!(e))
+        if let Err(e) = self.get_file().write("\n".as_bytes()) {
+            return Err(io_error!(e));
         }
+
+        self.state = LoggerLevel::None;
+        Ok(())
     }
 }
 

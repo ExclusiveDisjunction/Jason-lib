@@ -69,7 +69,7 @@ macro_rules! null_error {
     
     ($name: expr) => {
         {
-            Error::NullError($name.to_string())
+            $crate::core::errors::Error::NullError($name.to_string())
         }
     }
 }
@@ -79,12 +79,12 @@ macro_rules! format_error {
     ($content: expr, $reason_str: expr, $($v: expr), *) => {
         {
             // content, reason formatting string, values...
-            Error::FormatError($content.to_string(), format!($reason_str, $(&$v)*))
+            $crate::core::errors::Error::FormatError($content.to_string(), format!($reason_str, $(&$v)*))
         }
     };
     ($content: expr, $reason: expr) => {
         {
-            Error::FormatError($content.to_string(), $reason.to_string())
+            $crate::core::errors::Error::FormatError($content.to_string(), $reason.to_string())
         }
     }
 }
@@ -93,12 +93,12 @@ macro_rules! range_error {
     // 
     ($variable: expr, $value: expr) => {
         {
-            Error::RangeError($variable.to_string(), format!("{:?}", &$value), None, None)
+            $crate::core::errors::Error::RangeError($variable.to_string(), format!("{:?}", &$value), None, None)
         }
     };
     ($variable: expr, $value: expr, $min: expr, $max: expr) => {
         {
-            Error::RangeError($variable.to_string(), format!("{:?}", &$value), Some(format!("{:?}", $min)), Some(format!("{:?}", $max)))
+            $crate::core::errors::Error::RangeError($variable.to_string(), format!("{:?}", &$value), Some(format!("{:?}", $min)), Some(format!("{:?}", $max)))
         }
     }
 }
@@ -106,7 +106,7 @@ macro_rules! range_error {
 macro_rules! not_found_error {
     ($identifyer: expr) => {
         {
-            Error::NotFoundError($identifyer.to_string())
+            $crate::core::errors::Error::NotFoundError($identifyer.to_string())
         }
     }
 }
@@ -114,7 +114,7 @@ macro_rules! not_found_error {
 macro_rules! permission_error {
     () => {
         {
-            Error::PermissionError()
+            $crate::core::errors::Error::PermissionError()
         }
     }
 }
@@ -122,12 +122,12 @@ macro_rules! permission_error {
 macro_rules! operator_error{
     ($operator: expr, $operand1: expr) => {
         {
-            Error::OperatorError($operator.to_string(), format!("{:?}", &$operand1), None)
+            $crate::core::errors::Error::OperatorError($operator.to_string(), format!("{:?}", &$operand1), None)
         }
     };
     ($operator: expr, $operand1: expr, $operand2: expr) => {
         {
-            Error::OperatorError($operator.to_string(), format!("{:?}", &$operand1), Some( format!("{:?}", &$operand2) ))
+            $crate::core::errors::Error::OperatorError($operator.to_string(), format!("{:?}", &$operand1), Some( format!("{:?}", &$operand2) ))
         }
     }
 }
@@ -135,12 +135,12 @@ macro_rules! operator_error{
 macro_rules! conversion_error {
     ($reason: expr) => {
         {
-            Error::ConversionError(reason.to_string())
+            $crate::core::errors::Error::ConversionError(reason.to_string())
         }
     };
     ($reason_fmt: expr, $($v: expr), *) => {
         {
-            Error::ConversionError(format!($reason_fmt, $(&$v), *))
+            $crate::core::errors::Error::ConversionError(format!($reason_fmt, $(&$v), *))
         }
     }
 }
@@ -148,12 +148,12 @@ macro_rules! conversion_error {
 macro_rules! unexpected_error {
     ($fmt_str: expr, $( $v: expr), *) => {
         {
-            Error::UnexpectedError(format!($fmt_str, $(&$v)*))
+            $crate::core::errors::Error::UnexpectedError(format!($fmt_str, $(&$v)*))
         }
     };
     ($reason: expr) => {
         {
-            Error::UnexpectedError($reason.to_string())
+            $crate::core::errors::Error::UnexpectedError($reason.to_string())
         }
     }
 }
@@ -161,12 +161,12 @@ macro_rules! unexpected_error {
 macro_rules! operation_error {
     ($action: expr, $fmt_str: expr, $( $v: expr), *) => {
         {
-            Error::OperationError($action.to_string(), format!($fmt_str, $(&$v)*))
+            $crate::core::errors::Error::OperationError($action.to_string(), format!($fmt_str, $(&$v)*))
         }
     };
     ($action: expr, $reason: expr) => {
         {
-            Error::OperationError($action.to_string(), $reason.to_string())
+            $crate::core::errors::Error::OperationError($action.to_string(), $reason.to_string())
         }
     }
 }
@@ -174,17 +174,17 @@ macro_rules! operation_error {
 macro_rules! io_error {
     ($kind: expr, $fmt_str: expr, $( $v: expr), *) => {
         {
-            Error::IOError(std::io::Error($kind, format!($fmt_str, $(&$v)*)))
+            $crate::core::errors::Error::IOError(std::io::Error($kind, format!($fmt_str, $(&$v)*)))
         }
     };
     ($kind: expr, $reason: expr) => {
         {
-            Error::IOError(std::io::Error($kind, $reason.to_string()))
+            $crate::core::errors::Error::IOError(std::io::Error($kind, $reason.to_string()))
         }
     };
     ($io_error: expr) => {
         {
-            Error::IOError($io_error)
+            $crate::core::errors::Error::IOError($io_error)
         }
     }
 }

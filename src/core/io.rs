@@ -4,7 +4,7 @@ use super::errors::Error;
 //use crate::{make_error, core::errors::Error};
 
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Default)]
 pub struct BinaryUnit {
     data: Vec<u8>
 }
@@ -18,13 +18,6 @@ impl Debug for BinaryUnit {
         write!(f, "{} byte(s) of data", self.data.len())
     }
 }
-impl Default for BinaryUnit {
-    fn default() -> Self {
-        Self {
-            data: vec![]
-        }
-    }
-}
 impl From<Vec<u8>> for BinaryUnit {
         fn from(value: Vec<u8>) -> Self {
             Self {
@@ -35,6 +28,9 @@ impl From<Vec<u8>> for BinaryUnit {
 impl BinaryUnit {
     pub fn len(&self) -> usize {
         self.data.len()
+    }
+    pub fn is_empty(&self) -> bool {
+        self.data.is_empty()
     }
     pub fn expose(&self) -> &[u8] {
         &self.data
@@ -182,74 +178,74 @@ impl TryInto<isize> for BinaryUnit {
     }
 }
 
-impl Into<BinaryUnit> for i8 {
-    fn into(self) -> BinaryUnit {
-        BinaryUnit::from(self.to_ne_bytes().to_vec())
+impl From<i8> for BinaryUnit {
+    fn from(value: i8) -> Self {
+        BinaryUnit::from(value.to_ne_bytes().to_vec())
     }
 }
-impl Into<BinaryUnit> for i16 {
-    fn into(self) -> BinaryUnit {
-        BinaryUnit::from(self.to_ne_bytes().to_vec())
+impl From<i16> for BinaryUnit {
+    fn from(value: i16) -> Self {
+        BinaryUnit::from(value.to_ne_bytes().to_vec())
     }
 }
-impl Into<BinaryUnit> for i32 {
-    fn into(self) -> BinaryUnit {
-        BinaryUnit::from(self.to_ne_bytes().to_vec())
+impl From<i32> for BinaryUnit {
+    fn from(value: i32) -> Self {
+        BinaryUnit::from(value.to_ne_bytes().to_vec())
     }
 }
-impl Into<BinaryUnit> for i64 {
-    fn into(self) -> BinaryUnit {
-        BinaryUnit::from(self.to_ne_bytes().to_vec())
+impl From<i64> for BinaryUnit {
+    fn from(value: i64) -> Self {
+        BinaryUnit::from(value.to_ne_bytes().to_vec())
     }
 }
-impl Into<BinaryUnit> for i128 {
-    fn into(self) -> BinaryUnit {
-        BinaryUnit::from(self.to_ne_bytes().to_vec())
+impl From<i128> for BinaryUnit {
+    fn from(value: i128) -> Self {
+        BinaryUnit::from(value.to_ne_bytes().to_vec())
     }
 }
-impl Into<BinaryUnit> for u8 {
-    fn into(self) -> BinaryUnit {
-        BinaryUnit::from(self.to_ne_bytes().to_vec())
+impl From<u8> for BinaryUnit {
+    fn from(value: u8) -> Self {
+        BinaryUnit::from(value.to_ne_bytes().to_vec())
     }
 }
-impl Into<BinaryUnit> for u16 {
-    fn into(self) -> BinaryUnit {
-        BinaryUnit::from(self.to_ne_bytes().to_vec())
+impl From<u16> for BinaryUnit {
+    fn from(value: u16) -> Self {
+        BinaryUnit::from(value.to_ne_bytes().to_vec())
     }
 }
-impl Into<BinaryUnit> for u32 {
-    fn into(self) -> BinaryUnit {
-        BinaryUnit::from(self.to_ne_bytes().to_vec())
+impl From<u32> for BinaryUnit {
+    fn from(value: u32) -> Self {
+        BinaryUnit::from(value.to_ne_bytes().to_vec())
     }
 }
-impl Into<BinaryUnit> for u64 {
-    fn into(self) -> BinaryUnit {
-        BinaryUnit::from(self.to_ne_bytes().to_vec())
+impl From<u64> for BinaryUnit {
+    fn from(value: u64) -> Self {
+        BinaryUnit::from(value.to_ne_bytes().to_vec())
     }
 }
-impl Into<BinaryUnit> for u128 {
-    fn into(self) -> BinaryUnit {
-        BinaryUnit::from(self.to_ne_bytes().to_vec())
+impl From<u128> for BinaryUnit {
+    fn from(value: u128) -> Self {
+        BinaryUnit::from(value.to_ne_bytes().to_vec())
     }
 }
-impl Into<BinaryUnit> for f32 {
-    fn into(self) -> BinaryUnit {
-        BinaryUnit::from(self.to_ne_bytes().to_vec())
+impl From<f32> for BinaryUnit {
+    fn from(value: f32) -> Self {
+        BinaryUnit::from(value.to_ne_bytes().to_vec())
     }
 }
-impl Into<BinaryUnit> for f64 {
-    fn into(self) -> BinaryUnit {
-        BinaryUnit::from(self.to_ne_bytes().to_vec())
+impl From<f64> for BinaryUnit {
+    fn from(value: f64) -> Self {
+        BinaryUnit::from(value.to_ne_bytes().to_vec())
     }
 }
-impl Into<BinaryUnit> for isize {
-    fn into(self) -> BinaryUnit {
-        BinaryUnit::from(self.to_ne_bytes().to_vec())
+impl From<usize> for BinaryUnit {
+    fn from(value: usize) -> Self {
+        BinaryUnit::from(value.to_ne_bytes().to_vec())
     }
 }
-impl Into<BinaryUnit> for usize {
-    fn into(self) -> BinaryUnit {
-        BinaryUnit::from(self.to_ne_bytes().to_vec())
+impl From<isize> for BinaryUnit {
+    fn from(value: isize) -> Self {
+        BinaryUnit::from(value.to_ne_bytes().to_vec())
     }
 }
 
@@ -257,7 +253,7 @@ impl Into<BinaryUnit> for usize {
 macro_rules! binary_unit {
     ($x:expr) => {
         {
-            let tmp: BinaryUnit = $x.into();
+            let tmp: BinaryUnit = BinaryUnit::from($x);
             tmp
         }
     }
