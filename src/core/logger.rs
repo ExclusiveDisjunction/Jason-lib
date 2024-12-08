@@ -34,8 +34,8 @@ impl Debug for LoggerLevel {
 
 pub struct LoggerData {
     file: Option<std::fs::File>,
-    state: LoggerLevel,
-    level: LoggerLevel
+    state: LoggerLevel, //Currently being used
+    level: LoggerLevel //The level of the logger (what we will accept)
 }
 impl LoggerData {
     pub fn new() -> Self {
@@ -69,6 +69,9 @@ impl LoggerData {
     }
     pub fn is_open(&self) -> bool {
         self.file.is_some()
+    }
+    pub fn open_level(&self) -> LoggerLevel {
+        self.level
     }
     fn get_file(&mut self) -> &mut File {
         if self.file.is_none() {
@@ -167,6 +170,10 @@ impl Logger {
         let data = self.data.lock().unwrap();
         data.is_open()
     }
+    pub fn open_level(&self) -> LoggerLevel {
+        let data = self.data.lock().unwrap();
+        data.open_level()
+    }
 
     pub fn write(&self, obj: &impl Debug) -> Result<(), Error> {
         let mut data = self.data.lock().unwrap();
@@ -205,6 +212,10 @@ macro_rules! logger_write {
                 LoggerLevel::Critical => LoggerLevel::Critical,
                 _ => panic!("the type {:?} cannot be interpreted as a valid `LoggerLevel` instance", $level)
             };
+            if true_level < logging.open_level() {
+                return; //Nothing to do, optimization
+            }
+
             let contents: String = format!($($arg)*);
 
             if let Err(e) = logging.start_log(true_level) {
