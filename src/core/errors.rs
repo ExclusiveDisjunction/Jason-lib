@@ -135,7 +135,7 @@ macro_rules! operator_error{
 macro_rules! conversion_error {
     ($reason: expr) => {
         {
-            $crate::core::errors::Error::ConversionError(reason.to_string())
+            $crate::core::errors::Error::ConversionError($reason.to_string())
         }
     };
     ($reason_fmt: expr, $($v: expr), *) => {
